@@ -1,6 +1,8 @@
 const net = require("node:net");
 const readline = require("node:readline/promises");
 
+let clientId = null;
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -27,8 +29,8 @@ const ask = async () => {
 
   await moveCursor(0, -1);
   await clearLine(0);
-  
-  client.write(message);
+
+  client.write(`${clientId}-${message}`);
 };
 
 const client = net.createConnection(
@@ -47,7 +49,12 @@ client.on("data", async (data) => {
   await moveCursor(0, -1);
   await clearLine(0);
 
-  console.log(data.toString());
+  if (data.toString().substring(0, 2) === "id") {
+    clientId = data.toString().substring(3);
+    console.log(`Your client ID is ${clientId}`);
+  } else {
+    console.log(data.toString());
+  }
 
   ask();
 });
