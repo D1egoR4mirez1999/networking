@@ -1,6 +1,9 @@
 const net = require("node:net");
 const readline = require("node:readline/promises");
 
+const PORT = "4020";
+const HOST = "::1";
+
 let clientId = null;
 
 const rl = readline.createInterface({
@@ -33,12 +36,7 @@ const ask = async () => {
   client.write(`${clientId}-${message}`);
 };
 
-const client = net.createConnection(
-  { host: "127.0.0.1", port: 3000 },
-  async () => {
-    ask();
-  }
-);
+const client = net.createConnection({ host: HOST, port: PORT });
 
 client.on("end", () => {
   console.log("Connection closed");
@@ -49,11 +47,14 @@ client.on("data", async (data) => {
   await moveCursor(0, -1);
   await clearLine(0);
 
-  if (data.toString().substring(0, 2) === "id") {
-    clientId = data.toString().substring(3);
+  const dataString = data.toString();
+  const isIdMessage = dataString.substring(0, 2) === "id";
+
+  if (isIdMessage) {
+    clientId = dataString.substring(3);
     console.log(`Your client ID is ${clientId}`);
   } else {
-    console.log(data.toString());
+    console.log(dataString);
   }
 
   ask();

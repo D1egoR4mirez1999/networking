@@ -1,7 +1,6 @@
 const http = require("node:http");
 
 const port = 8000;
-const hostName = "192.168.1.3";
 
 const server = http.createServer((req, res) => {
     const data = { message: "Hello World" };
@@ -12,7 +11,7 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify(data));
 });
 
-server.listen(port, hostName, () => {
-    console.log(`Server is running on http://${hostName}:${port}`);
+server.listen(port, () => {
+    console.log(`Server is running on `, server.address());
 });
 
