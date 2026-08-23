@@ -6,6 +6,6 @@ const server = net.createServer((socket) => {
   });
 });
 
-server.listen(3000, "192.168.1.3", () => {
+server.listen(3000, "localhost", () => {
   console.log("Server is running ", server.address());
 });
